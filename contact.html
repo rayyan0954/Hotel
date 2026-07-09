@@ -170,6 +170,12 @@ Open 24 Hours
 
 <form id="contactForm">
 
+<!-- Honeypot -->
+<input type="text" id="contactWebsite" name="website" style="display:none">
+
+<!-- Page Load Time -->
+<input type="hidden" id="contactLoadTime">
+
 <div class="form-group">
 
 <label>
@@ -235,9 +241,11 @@ required>
 
 </div>
 
-<button type="submit" class="btn">
+<button type="submit" class="btn" id="contactSubmitBtn">
 
-Send Message
+<span>Send Message</span>
+
+<div id="contactLoader" class="loader hidden"></div>
 
 </button>
 
@@ -250,6 +258,57 @@ Send Message
 </div>
 
 </section>
+
+<!-- ==========================================
+SUCCESS MODAL
+========================================== -->
+
+<div
+class="modal" id="successModal">
+
+<div class="modal-content">
+
+<i class="fa-solid fa-circle-check success-icon"></i>
+
+<h2>Message Sent!</h2>
+
+<p>
+Thank you for contacting <strong>Rayyan's Luxury Stay</strong>.<br><br>
+We have received your message and will get back to you shortly.
+</p>
+
+<button class="btn" onclick="closeSuccess()">
+Go Back
+</button>
+
+</div>
+
+</div>
+
+<!-- ==========================================
+ERROR MODAL
+========================================== -->
+
+<div
+class="modal" id="errorModal">
+
+<div class="modal-content">
+
+<i class="fa-solid fa-circle-xmark error-icon"></i>
+
+<h2>Submission Failed</h2>
+
+<p id="errorText">
+Something went wrong. Please try again later.
+</p>
+
+<button class="btn" onclick="closeError()">
+Close
+</button>
+
+</div>
+
+</div>
 
 <section class="map-section">
 

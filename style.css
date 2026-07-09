@@ -225,61 +225,59 @@ Header
 ==============================*/
 
 header{
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-background:rgba(255,255,255,.92);
-
-backdrop-filter:blur(12px);
-
-box-shadow:0 4px 20px rgba(0,0,0,.05);
-
-z-index:999;
-
-transition:.4s;
-
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    background:transparent;
+    z-index:999;
+    transition: all 0.4s ease;
+    padding: 10px 0;
 }
 
-body.dark header{
+header.scrolled {
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(12px);
+    box-shadow:0 4px 20px rgba(0,0,0,.1);
+    padding: 5px 0;
+}
 
-background:#16213E;
-
+body.dark header.scrolled {
+    background:rgba(22, 33, 62, 0.95);
 }
 
 header .container{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding:16px 0;
-
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 10px 0;
 }
 
 .logo h2{
+    font-size:1.6rem;
+    color: var(--primary);
+    margin:0;
+    transition: color 0.4s;
+}
 
-font-size:1.6rem;
+header:not(.scrolled) .logo h2,
+header:not(.scrolled) nav a {
+    color: #fff;
+}
 
-color:var(--primary);
-
-margin:0;
-
+header:not(.scrolled) .book-btn {
+    background: var(--primary);
 }
 
 .logo span{
+    font-size:.82rem;
+    color:var(--gray);
+    display: block;
+    margin-top: -5px;
+}
 
-font-size:.82rem;
-
-color:var(--gray);
-
+header:not(.scrolled) .logo span {
+    color: #eee;
 }
 
 /*==============================
@@ -343,33 +341,25 @@ Dark Button
 ==============================*/
 
 .dark-btn{
-
-width:44px;
-
-height:44px;
-
-border-radius:50%;
-
-background:var(--primary);
-
-color:#fff;
-
-font-size:18px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-transition:.3s;
-
+    padding: 8px 15px;
+    border-radius: 30px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
 }
 
 .dark-btn:hover{
+    background: var(--secondary);
+    transform: translateY(-2px);
+}
 
-transform:rotate(180deg);
-
+.dark-btn i {
+    font-size: 16px;
 }
 
 /*==============================
@@ -466,7 +456,7 @@ Hero
 
 height:100vh;
 
-background:url("images/hero.jpg") center/cover no-repeat;
+background:url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1920") center/cover no-repeat;
 
 display:flex;
 
@@ -1623,7 +1613,7 @@ MODALS
 
 .modal{
 
-position:fixed;
+position:fixed; padding: 10px 0;
 
 top:0;
 
@@ -1733,7 +1723,7 @@ BACK TO TOP BUTTON
 
 #topBtn{
 
-position:fixed;
+position:fixed; padding: 10px 0;
 
 bottom:35px;
 

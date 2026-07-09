@@ -1,1590 +1,370 @@
-console.log("SCRIPT.JS LOADED");
+/**
+ * Rayyan's Luxury Stay - script.js
+ * Optimized and Refactored
+ */
 
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbwWa4vcCYBih7qwV3H6BbaOD4_lPi_swXLFzWzAzHeug_PtH_BwoQ0WcYFx3endIOlq/exec";
-/* ============================================================
-   Rayyan's Luxury Stay
-   script.js - Part 1
-   ============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWa4vcCYBih7qwV3H6BbaOD4_lPi_swXLFzWzAzHeug_PtH_BwoQ0WcYFx3endIOlq/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // DOM Elements
+    const body = document.body;
+    const header = document.querySelector("header");
+    const darkButton = document.getElementById("darkMode");
+    const topBtn = document.getElementById("topBtn");
+    const menuButton = document.getElementById("menuToggle");
+    const menu = document.getElementById("menu");
+    const loadTimeInput = document.getElementById("loadTime");
+    const contactLoadTimeInput = document.getElementById("contactLoadTime");
+    const bookingForm = document.getElementById("bookingForm");
+    const contactForm = document.getElementById("contactForm");
+
+    // Initialize Load Time
+    const now = Date.now();
+    if (loadTimeInput) loadTimeInput.value = now;
+    if (contactLoadTimeInput) contactLoadTimeInput.value = now;
 
     /* ==========================================
-       Store Page Load Time
+       Sticky Header & Back to Top
        ========================================== */
+    const isHomePage = !!document.getElementById("home");
 
-    const loadTimeInput = document.getElementById("loadTime");
+    const handleHeader = () => {
+        if (!isHomePage || window.scrollY > 50) {
+            header.classList.add("scrolled");
+        } else {
+            header.classList.remove("scrolled");
+        }
+    };
 
-    if (loadTimeInput) {
-        loadTimeInput.value = Date.now();
+    window.addEventListener("scroll", handleHeader);
+    handleHeader();
+
+    window.addEventListener("scroll", () => {
+        // Back to Top
+        if (topBtn) {
+            if (window.scrollY > 500) {
+                topBtn.classList.add("show");
+            } else {
+                topBtn.classList.remove("show");
+            }
+        }
+    });
+
+    if (topBtn) {
+        topBtn.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
     }
 
     /* ==========================================
        Dark Mode
        ========================================== */
-
-    const darkButton = document.getElementById("darkMode");
+    const updateDarkIcon = (isDark) => {
+        if (!darkButton) return;
+        darkButton.innerHTML = isDark
+            ? '<i class="fa-solid fa-sun"></i> <span>Light Mode</span>'
+            : '<i class="fa-solid fa-moon"></i> <span>Dark Mode</span>';
+    };
 
     if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-        changeDarkIcon(true);
+        body.classList.add("dark");
+        updateDarkIcon(true);
+    } else {
+        updateDarkIcon(false);
     }
 
     if (darkButton) {
-
         darkButton.addEventListener("click", () => {
-
-            document.body.classList.toggle("dark");
-
-            const enabled = document.body.classList.contains("dark");
-
-            localStorage.setItem(
-                "theme",
-                enabled ? "dark" : "light"
-            );
-
-            changeDarkIcon(enabled);
-
+            body.classList.toggle("dark");
+            const isDark = body.classList.contains("dark");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+            updateDarkIcon(isDark);
         });
-
-    }
-
-    function changeDarkIcon(enabled) {
-
-        if (!darkButton) return;
-
-        darkButton.innerHTML = enabled
-            ? '<i class="fa-solid fa-sun"></i>'
-            : '<i class="fa-solid fa-moon"></i>';
-
-    }
-
-    /* ==========================================
-       Smooth Scroll
-       ========================================== */
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-
-        anchor.addEventListener("click", function (e) {
-
-            const target = document.querySelector(this.getAttribute("href"));
-
-            if (!target) return;
-
-            e.preventDefault();
-
-            target.scrollIntoView({
-
-                behavior: "smooth",
-
-                block: "start"
-
-            });
-
-        });
-
-    });
-
-    /* ==========================================
-       Back To Top
-       ========================================== */
-
-    const topBtn = document.getElementById("topBtn");
-
-    window.addEventListener("scroll", () => {
-
-        if (!topBtn) return;
-
-        if (window.scrollY > 500) {
-
-            topBtn.classList.add("show");
-
-        } else {
-
-            topBtn.classList.remove("show");
-
-        }
-
-    });
-
-    if (topBtn) {
-
-        topBtn.addEventListener("click", () => {
-
-            window.scrollTo({
-
-                top: 0,
-
-                behavior: "smooth"
-
-            });
-
-        });
-
-    }
-
-    /* ==========================================
-       Room Slider
-       ========================================== */
-
-    const slider = document.querySelector(".slides");
-
-    if (slider) {
-
-        const slides = document.querySelectorAll(".slide");
-
-        const next = document.querySelector(".next");
-
-        const prev = document.querySelector(".prev");
-
-        const dotsContainer = document.querySelector(".dots");
-
-        let index = 0;
-
-        let autoSlide;
-
-        /* Create Dots */
-
-        slides.forEach((slide, i) => {
-
-            const dot = document.createElement("span");
-
-            dot.classList.add("dot");
-
-            if (i === 0) {
-
-                dot.classList.add("active");
-
-            }
-
-            dot.addEventListener("click", () => {
-
-                index = i;
-
-                updateSlider();
-
-                restartAuto();
-
-            });
-
-            dotsContainer.appendChild(dot);
-
-        });
-
-        const dots = document.querySelectorAll(".dot");
-
-        function updateSlider() {
-
-            slider.style.transform =
-                `translateX(-${index * 100}%)`;
-
-            dots.forEach(dot =>
-                dot.classList.remove("active"));
-
-            dots[index].classList.add("active");
-
-        }
-
-        function nextSlide() {
-
-            index++;
-
-            if (index >= slides.length) {
-
-                index = 0;
-
-            }
-
-            updateSlider();
-
-        }
-
-        function prevSlide() {
-
-            index--;
-
-            if (index < 0) {
-
-                index = slides.length - 1;
-
-            }
-
-            updateSlider();
-
-        }
-
-        if (next) {
-
-            next.addEventListener("click", () => {
-
-                nextSlide();
-
-                restartAuto();
-
-            });
-
-        }
-
-        if (prev) {
-
-            prev.addEventListener("click", () => {
-
-                prevSlide();
-
-                restartAuto();
-
-            });
-
-        }
-
-        function startAuto() {
-
-            autoSlide = setInterval(() => {
-
-                nextSlide();
-
-            }, 5000);
-
-        }
-
-        function restartAuto() {
-
-            clearInterval(autoSlide);
-
-            startAuto();
-
-        }
-
-        startAuto();
-
     }
 
     /* ==========================================
        Mobile Menu
        ========================================== */
-
-    const menuButton = document.getElementById("menuToggle");
-
-    const menu = document.getElementById("menu");
-
     if (menuButton && menu) {
-
         menuButton.addEventListener("click", () => {
-
             menu.classList.toggle("active");
-
         });
 
-    }
-
-    /* ==========================================
-       Initialize AOS
-       ========================================== */
-
-    if (typeof AOS !== "undefined") {
-
-        AOS.init({
-
-            duration: 900,
-
-            once: true,
-
-            easing: "ease-in-out"
-
-        });
-
-    }
-
-});
-    /* ==========================================
-       Booking Form Validation
-       ========================================== */
-
-    const bookingForm = document.getElementById("bookingForm");
-
-    if (bookingForm) {
-
-        const name = document.getElementById("name");
-        const email = document.getElementById("email");
-        const phone = document.getElementById("phone");
-        const guests = document.getElementById("guests");
-        const checkin = document.getElementById("checkin");
-        const checkout = document.getElementById("checkout");
-        const roomtype = document.getElementById("roomtype");
-        const message = document.getElementById("message");
-
-        const submitBtn = document.getElementById("submitBtn");
-        const loader = document.getElementById("loader");
-
-        // Set minimum check-in date to today
-        const today = new Date().toISOString().split("T")[0];
-        checkin.min = today;
-
-        checkin.addEventListener("change", () => {
-            checkout.min = checkin.value;
-
-            if (checkout.value && checkout.value < checkin.value) {
-                checkout.value = "";
-            }
-        });
-
-        function showError(input, text) {
-
-            const group = input.closest(".form-group");
-
-            if (!group) return;
-
-            const error = group.querySelector(".error");
-
-            if (error) {
-
-                error.textContent = text;
-
-            }
-
-            input.classList.add("input-error");
-
-        }
-
-        function clearError(input) {
-
-            const group = input.closest(".form-group");
-
-            if (!group) return;
-
-            const error = group.querySelector(".error");
-
-            if (error) {
-
-                error.textContent = "";
-
-            }
-
-            input.classList.remove("input-error");
-
-        }
-
-        function validateName() {
-
-            const value = name.value.trim();
-
-            if (value.length < 3) {
-
-                showError(name, "Enter your full name");
-
-                return false;
-
-            }
-
-            clearError(name);
-
-            return true;
-
-        }
-
-        function validateEmail() {
-
-            const regex =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!regex.test(email.value.trim())) {
-
-                showError(email, "Enter a valid email");
-
-                return false;
-
-            }
-
-            clearError(email);
-
-            return true;
-
-        }
-
-        function validatePhone() {
-
-            const regex =
-                /^[6-9]\d{9}$/;
-
-            if (!regex.test(phone.value.trim())) {
-
-                showError(phone, "Enter a valid Indian phone number");
-
-                return false;
-
-            }
-
-            clearError(phone);
-
-            return true;
-
-        }
-
-        function validateGuests() {
-
-            if (guests.value === "") {
-
-                showError(guests, "Select number of guests");
-
-                return false;
-
-            }
-
-            clearError(guests);
-
-            return true;
-
-        }
-
-        function validateRoom() {
-
-            if (roomtype.value === "") {
-
-                showError(roomtype, "Select a room type");
-
-                return false;
-
-            }
-
-            clearError(roomtype);
-
-            return true;
-
-        }
-
-        function validateDates() {
-
-            if (!checkin.value) {
-
-                showError(checkin, "Select check-in date");
-
-                return false;
-
-            }
-
-            if (!checkout.value) {
-
-                showError(checkout, "Select check-out date");
-
-                return false;
-
-            }
-
-            const inDate = new Date(checkin.value);
-
-            const outDate = new Date(checkout.value);
-
-            if (outDate <= inDate) {
-
-                showError(checkout,
-                    "Check-out must be after check-in");
-
-                return false;
-
-            }
-
-            const diff =
-                (outDate - inDate) /
-                (1000 * 60 * 60 * 24);
-
-            if (diff > 30) {
-
-                showError(
-                    checkout,
-                    "Maximum stay is 30 nights"
-                );
-
-                return false;
-
-            }
-
-            clearError(checkin);
-
-            clearError(checkout);
-
-            return true;
-
-        }
-
-        name.addEventListener("blur", validateName);
-
-        email.addEventListener("blur", validateEmail);
-
-        phone.addEventListener("blur", validatePhone);
-
-        guests.addEventListener("change", validateGuests);
-
-        roomtype.addEventListener("change", validateRoom);
-
-        checkin.addEventListener("change", validateDates);
-
-        checkout.addEventListener("change", validateDates);
-
-        function validateForm() {
-
-            return (
-
-                validateName() &&
-
-                validateEmail() &&
-
-                validatePhone() &&
-
-                validateGuests() &&
-
-                validateRoom() &&
-
-                validateDates()
-
-            );
-
-        }
-        /* ==========================================
-       Booking Form Validation
-       ========================================== */
-
-    const bookingForm = document.getElementById("bookingForm");
-
-    if (bookingForm) {
-
-        const name = document.getElementById("name");
-        const email = document.getElementById("email");
-        const phone = document.getElementById("phone");
-        const guests = document.getElementById("guests");
-        const checkin = document.getElementById("checkin");
-        const checkout = document.getElementById("checkout");
-        const roomtype = document.getElementById("roomtype");
-        const message = document.getElementById("message");
-
-        const submitBtn = document.getElementById("submitBtn");
-        const loader = document.getElementById("loader");
-
-        // Set minimum check-in date to today
-        const today = new Date().toISOString().split("T")[0];
-        checkin.min = today;
-
-        checkin.addEventListener("change", () => {
-            checkout.min = checkin.value;
-
-            if (checkout.value && checkout.value < checkin.value) {
-                checkout.value = "";
-            }
-        });
-
-        function showError(input, text) {
-
-            const group = input.closest(".form-group");
-
-            if (!group) return;
-
-            const error = group.querySelector(".error");
-
-            if (error) {
-
-                error.textContent = text;
-
-            }
-
-            input.classList.add("input-error");
-
-        }
-
-        function clearError(input) {
-
-            const group = input.closest(".form-group");
-
-            if (!group) return;
-
-            const error = group.querySelector(".error");
-
-            if (error) {
-
-                error.textContent = "";
-
-            }
-
-            input.classList.remove("input-error");
-
-        }
-
-        function validateName() {
-
-            const value = name.value.trim();
-
-            if (value.length < 3) {
-
-                showError(name, "Enter your full name");
-
-                return false;
-
-            }
-
-            clearError(name);
-
-            return true;
-
-        }
-
-        function validateEmail() {
-
-            const regex =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!regex.test(email.value.trim())) {
-
-                showError(email, "Enter a valid email");
-
-                return false;
-
-            }
-
-            clearError(email);
-
-            return true;
-
-        }
-
-        function validatePhone() {
-
-            const regex =
-                /^[6-9]\d{9}$/;
-
-            if (!regex.test(phone.value.trim())) {
-
-                showError(phone, "Enter a valid Indian phone number");
-
-                return false;
-
-            }
-
-            clearError(phone);
-
-            return true;
-
-        }
-
-        function validateGuests() {
-
-            if (guests.value === "") {
-
-                showError(guests, "Select number of guests");
-
-                return false;
-
-            }
-
-            clearError(guests);
-
-            return true;
-
-        }
-
-        function validateRoom() {
-
-            if (roomtype.value === "") {
-
-                showError(roomtype, "Select a room type");
-
-                return false;
-
-            }
-
-            clearError(roomtype);
-
-            return true;
-
-        }
-
-        function validateDates() {
-
-            if (!checkin.value) {
-
-                showError(checkin, "Select check-in date");
-
-                return false;
-
-            }
-
-            if (!checkout.value) {
-
-                showError(checkout, "Select check-out date");
-
-                return false;
-
-            }
-
-            const inDate = new Date(checkin.value);
-
-            const outDate = new Date(checkout.value);
-
-            if (outDate <= inDate) {
-
-                showError(checkout,
-                    "Check-out must be after check-in");
-
-                return false;
-
-            }
-
-            const diff =
-                (outDate - inDate) /
-                (1000 * 60 * 60 * 24);
-
-            if (diff > 30) {
-
-                showError(
-                    checkout,
-                    "Maximum stay is 30 nights"
-                );
-
-                return false;
-
-            }
-
-            clearError(checkin);
-
-            clearError(checkout);
-
-            return true;
-
-        }
-
-        name.addEventListener("blur", validateName);
-
-        email.addEventListener("blur", validateEmail);
-
-        phone.addEventListener("blur", validatePhone);
-
-        guests.addEventListener("change", validateGuests);
-
-        roomtype.addEventListener("change", validateRoom);
-
-        checkin.addEventListener("change", validateDates);
-
-        checkout.addEventListener("change", validateDates);
-
-        function validateForm() {
-
-            return (
-
-                validateName() &&
-
-                validateEmail() &&
-
-                validatePhone() &&
-
-                validateGuests() &&
-
-                validateRoom() &&
-
-                validateDates()
-
-            );
-
-        }
-                /* ==========================================
-           Google Sheets Integration
-           ========================================== */
-
-
-        let submitting = false;
-
-        bookingForm.addEventListener("submit", async function (e) {
-
-            e.preventDefault();
-
-            if (submitting) return;
-
-            if (!validateForm()) return;
-
-            /* ----------------------------
-               Spam Protection
-            ----------------------------- */
-
-            const honeypot =
-                document.getElementById("website");
-
-            if (honeypot.value !== "") {
-
-                console.warn("Spam detected.");
-
-                return;
-
-            }
-
-            const loadTime =
-                Number(document.getElementById("loadTime").value);
-
-            const seconds =
-                (Date.now() - loadTime) / 1000;
-
-            if (seconds < 5) {
-
-                showErrorModal(
-                    "Form submitted too quickly. Please try again."
-                );
-
-                return;
-
-            }
-
-            /* ----------------------------
-               Prevent duplicate submission
-            ----------------------------- */
-
-            const bookingKey =
-                name.value +
-                email.value +
-                checkin.value +
-                checkout.value;
-
-            if (
-                localStorage.getItem("lastBooking") === bookingKey
-            ) {
-
-                showErrorModal(
-                    "Looks like you've already submitted this booking."
-                );
-
-                return;
-
-            }
-
-            submitting = true;
-
-            submitBtn.disabled = true;
-
-            loader.classList.remove("hidden");
-
-            submitBtn.querySelector("span").textContent =
-                "Submitting...";
-
-            /* ----------------------------
-               Booking Data
-            ----------------------------- */
-
-            const bookingData = {
-
-                timestamp:
-                    new Date().toLocaleString(),
-
-                name:
-                    name.value.trim(),
-
-                email:
-                    email.value.trim(),
-
-                phone:
-                    phone.value.trim(),
-
-                checkin:
-                    checkin.value,
-
-                checkout:
-                    checkout.value,
-
-                guests:
-                    guests.value,
-
-                roomtype:
-                    roomtype.value,
-
-                message:
-                    message.value.trim()
-
-            };
-
-            try {
-
-                const response =
-                    await fetch(SCRIPT_URL, {
-
-                        method: "POST",
-
-                    
-
-                        body: JSON.stringify(bookingData)
-
-                    });
-
-                const result =
-                    await response.json();
-
-                if (
-                    result.status === "success"
-                ) {
-
-                    localStorage.setItem(
-                        "lastBooking",
-                        bookingKey
-                    );
-
-                    bookingForm.reset();
-
-                    document.getElementById("loadTime").value =
-                        Date.now();
-
-                    showSuccessModal();
-
-                } else {
-
-                    showErrorModal(
-                        result.message ||
-                        "Unable to submit booking."
-                    );
-
-                }
-
-            }
-
-            catch (error) {
-
-                console.error(error);
-
-                showErrorModal(
-                    "Unable to connect to server."
-                );
-
-            }
-
-            finally {
-
-                loader.classList.add("hidden");
-
-                submitBtn.disabled = false;
-
-                submitBtn.querySelector("span").textContent =
-                    "Book Now";
-
-                submitting = false;
-
-            }
-
-        });
-                /* ==========================================
-           Success & Error Modals
-           ========================================== */
-
-        const successModal =
-            document.getElementById("successModal");
-
-        const errorModal =
-            document.getElementById("errorModal");
-
-        const errorText =
-            document.getElementById("errorText");
-
-        function showSuccessModal() {
-
-            if (!successModal) return;
-
-            successModal.classList.add("show");
-
-            document.body.style.overflow = "hidden";
-
-            // Auto close after 5 seconds
-            setTimeout(() => {
-
-                closeSuccess();
-
-            }, 5000);
-
-        }
-
-        function closeSuccess() {
-
-            if (!successModal) return;
-
-            successModal.classList.remove("show");
-
-            document.body.style.overflow = "";
-
-        }
-
-        function showErrorModal(message) {
-
-            if (!errorModal) return;
-
-            errorText.textContent =
-                message ||
-                "Something went wrong.";
-
-            errorModal.classList.add("show");
-
-            document.body.style.overflow = "hidden";
-
-        }
-
-        function closeError() {
-
-            if (!errorModal) return;
-
-            errorModal.classList.remove("show");
-
-            document.body.style.overflow = "";
-
-        }
-
-        // Make available for HTML buttons
-        window.closeSuccess = closeSuccess;
-        window.closeError = closeError;
-
-        /* ==========================================
-           Close when clicking outside modal
-           ========================================== */
-
-        window.addEventListener("click", function (e) {
-
-            if (e.target === successModal) {
-
-                closeSuccess();
-
-            }
-
-            if (e.target === errorModal) {
-
-                closeError();
-
-            }
-
-        });
-
-        /* ==========================================
-           ESC key closes modals
-           ========================================== */
-
-        document.addEventListener("keydown", function (e) {
-
-            if (e.key === "Escape") {
-
-                closeSuccess();
-
-                closeError();
-
-            }
-
-        });
-
-        /* ==========================================
-           Prevent Enter from submitting invalid form
-           ========================================== */
-
-        bookingForm.addEventListener("keypress", function (e) {
-
-            if (e.key === "Enter") {
-
-                const target = e.target.tagName.toLowerCase();
-
-                if (target !== "textarea") {
-
-                    e.preventDefault();
-
-                }
-
-            }
-
-        });
-
-        /* ==========================================
-           Character Counter (Message)
-           ========================================== */
-
-        if (message) {
-
-            const counter = document.createElement("small");
-
-            counter.className = "char-counter";
-
-            counter.textContent = "0 / 500";
-
-            message.parentNode.appendChild(counter);
-
-            message.setAttribute("maxlength", "500");
-
-            message.addEventListener("input", () => {
-
-                counter.textContent =
-                    `${message.value.length} / 500`;
-
+        // Close menu on link click
+        menu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                menu.classList.remove("active");
             });
+        });
+    }
 
-        }
-            /* ==========================================
-           Auto Save Form
-        ========================================== */
-
-        const formFields = [
-
-            name,
-
-            email,
-
-            phone,
-
-            guests,
-
-            checkin,
-
-            checkout,
-
-            roomtype,
-
-            message
-
-        ];
-
-        function saveDraft() {
-
-            const draft = {
-
-                name: name.value,
-
-                email: email.value,
-
-                phone: phone.value,
-
-                guests: guests.value,
-
-                checkin: checkin.value,
-
-                checkout: checkout.value,
-
-                roomtype: roomtype.value,
-
-                message: message.value
-
-            };
-
-            localStorage.setItem(
-
-                "bookingDraft",
-
-                JSON.stringify(draft)
-
-            );
-
-        }
-
-        function restoreDraft() {
-
-            const draft = localStorage.getItem(
-
-                "bookingDraft"
-
-            );
-
-            if (!draft) return;
-
-            try {
-
-                const data = JSON.parse(draft);
-
-                name.value = data.name || "";
-
-                email.value = data.email || "";
-
-                phone.value = data.phone || "";
-
-                guests.value = data.guests || "";
-
-                checkin.value = data.checkin || "";
-
-                checkout.value = data.checkout || "";
-
-                roomtype.value = data.roomtype || "";
-
-                message.value = data.message || "";
-
+    /* ==========================================
+       Smooth Scroll
+       ========================================== */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function(e) {
+            const targetId = this.getAttribute("href");
+            if (targetId === "#") return;
+            const target = document.querySelector(targetId);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
             }
+        });
+    });
 
-            catch (e) {
+    /* ==========================================
+       Room Slider
+       ========================================== */
+    const slider = document.querySelector(".slides");
+    if (slider) {
+        const slides = document.querySelectorAll(".slide");
+        const next = document.querySelector(".next");
+        const prev = document.querySelector(".prev");
+        const dotsContainer = document.querySelector(".dots");
+        let index = 0;
+        let autoSlide;
 
-                console.log(e);
-
-            }
-
-        }
-
-        restoreDraft();
-
-        formFields.forEach(field => {
-
-            field.addEventListener(
-
-                "input",
-
-                saveDraft
-
-            );
-
+        slides.forEach((_, i) => {
+            const dot = document.createElement("span");
+            dot.classList.add("dot");
+            if (i === 0) dot.classList.add("active");
+            dot.addEventListener("click", () => {
+                index = i;
+                updateSlider();
+                restartAuto();
+            });
+            dotsContainer.appendChild(dot);
         });
 
-        /* ==========================================
-           Clear Draft After Success
-        ========================================== */
+        const dots = document.querySelectorAll(".dot");
 
-        function clearDraft() {
-
-            localStorage.removeItem(
-
-                "bookingDraft"
-
-            );
-
+        function updateSlider() {
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach(d => d.classList.remove("active"));
+            dots[index].classList.add("active");
         }
 
-        /* ==========================================
-           Offline Detection
-        ========================================== */
-
-        function checkNetwork() {
-
-            if (!navigator.onLine) {
-
-                showErrorModal(
-
-                    "No internet connection detected."
-
-                );
-
-                return false;
-
-            }
-
-            return true;
-
+        function nextSlide() {
+            index = (index + 1) % slides.length;
+            updateSlider();
         }
 
-        window.addEventListener(
+        if (next) next.addEventListener("click", () => { nextSlide(); restartAuto(); });
+        if (prev) prev.addEventListener("click", () => { index = (index - 1 + slides.length) % slides.length; updateSlider(); restartAuto(); });
 
-            "offline",
+        const startAuto = () => autoSlide = setInterval(nextSlide, 5000);
+        const restartAuto = () => { clearInterval(autoSlide); startAuto(); };
+        startAuto();
+    }
 
-            () => {
+    /* ==========================================
+       Booking & Contact Form Logic
+       ========================================== */
+    const successModal = document.getElementById("successModal");
+    const errorModal = document.getElementById("errorModal");
+    const errorText = document.getElementById("errorText");
 
-                showErrorModal(
+    const showSuccess = () => {
+        if (successModal) successModal.classList.add("show");
+        body.style.overflow = "hidden";
+        setTimeout(closeModals, 5000);
+    };
 
-                    "Internet connection lost."
-
-                );
-
-            }
-
-        );
-
-        window.addEventListener(
-
-            "online",
-
-            () => {
-
-                console.log(
-
-                    "Back Online"
-
-                );
-
-            }
-
-        );
-
-        /* ==========================================
-           Cooldown Timer
-        ========================================== */
-
-        const COOLDOWN = 30000;
-
-        function checkCooldown() {
-
-            const last = Number(
-
-                localStorage.getItem(
-
-                    "lastSubmitTime"
-
-                )
-
-            );
-
-            if (!last) return true;
-
-            if (
-
-                Date.now() - last < COOLDOWN
-
-            ) {
-
-                const remaining = Math.ceil(
-
-                    (COOLDOWN -
-
-                        (Date.now() - last))
-
-                    / 1000
-
-                );
-
-                showErrorModal(
-
-                    "Please wait " +
-
-                    remaining +
-
-                    " seconds before another booking."
-
-                );
-
-                return false;
-
-            }
-
-            return true;
-
+    const showError = (msg) => {
+        if (errorModal) {
+            errorText.textContent = msg || "Something went wrong.";
+            errorModal.classList.add("show");
+            body.style.overflow = "hidden";
         }
+    };
 
-        function saveCooldown() {
+    const closeModals = () => {
+        if (successModal) successModal.classList.remove("show");
+        if (errorModal) errorModal.classList.remove("show");
+        body.style.overflow = "";
+    };
 
-            localStorage.setItem(
+    window.closeSuccess = closeModals;
+    window.closeError = closeModals;
 
-                "lastSubmitTime",
-
-                Date.now()
-
-            );
-
+    // Validation Helpers
+    const setFieldError = (input, text) => {
+        const group = input.closest(".form-group");
+        if (group) {
+            const errEl = group.querySelector(".error");
+            if (errEl) errEl.textContent = text;
+            input.classList.add("input-error");
         }
+    };
 
-        /* ==========================================
-           Retry Fetch
-        ========================================== */
+    const clearFieldError = (input) => {
+        const group = input.closest(".form-group");
+        if (group) {
+            const errEl = group.querySelector(".error");
+            if (errEl) errEl.textContent = "";
+            input.classList.remove("input-error");
+        }
+    };
 
-        async function postBooking(
+    /* Booking Form */
+    if (bookingForm) {
+        const bInputs = {
+            name: document.getElementById("name"),
+            email: document.getElementById("email"),
+            phone: document.getElementById("phone"),
+            guests: document.getElementById("guests"),
+            checkin: document.getElementById("checkin"),
+            checkout: document.getElementById("checkout"),
+            roomtype: document.getElementById("roomtype"),
+            message: document.getElementById("message")
+        };
+        const bSubmitBtn = document.getElementById("submitBtn");
+        const bLoader = document.getElementById("loader");
 
-            url,
+        // Set min check-in
+        const today = new Date().toISOString().split("T")[0];
+        if (bInputs.checkin) bInputs.checkin.min = today;
 
-            data,
+        const validateBooking = () => {
+            let isValid = true;
+            if (bInputs.name.value.trim().length < 3) { setFieldError(bInputs.name, "Full name required"); isValid = false; } else clearFieldError(bInputs.name);
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bInputs.email.value)) { setFieldError(bInputs.email, "Valid email required"); isValid = false; } else clearFieldError(bInputs.email);
+            if (!/^[6-9]\d{9}$/.test(bInputs.phone.value)) { setFieldError(bInputs.phone, "Valid 10-digit number required"); isValid = false; } else clearFieldError(bInputs.phone);
+            if (!bInputs.guests.value) { setFieldError(bInputs.guests, "Required"); isValid = false; } else clearFieldError(bInputs.guests);
+            if (!bInputs.roomtype.value) { setFieldError(bInputs.roomtype, "Required"); isValid = false; } else clearFieldError(bInputs.roomtype);
 
-            retries = 3
+            if (!bInputs.checkin.value) { setFieldError(bInputs.checkin, "Required"); isValid = false; } else clearFieldError(bInputs.checkin);
+            if (!bInputs.checkout.value) { setFieldError(bInputs.checkout, "Required"); isValid = false; } else clearFieldError(bInputs.checkout);
 
-        ) {
-
-            while (retries > 0) {
-
-                try {
-
-                    const response = await fetch(
-
-                        url,
-
-                        {
-
-                            method: "POST",
-
-                            
-
-                            body:
-
-                                JSON.stringify(data)
-
-                        }
-
-                    );
-
-                    return await response.json();
-
+            if (bInputs.checkin.value && bInputs.checkout.value) {
+                if (new Date(bInputs.checkout.value) <= new Date(bInputs.checkin.value)) {
+                    setFieldError(bInputs.checkout, "Check-out must be after check-in");
+                    isValid = false;
                 }
-
-                catch (err) {
-
-                    retries--;
-
-                    if (retries === 0)
-
-                        throw err;
-
-                }
-
             }
-
-        }
-
-        /* ==========================================
-           Update Existing Submit Logic
-        ========================================== */
-
-        const originalSubmitHandler =
-            bookingForm.onsubmit;
-
-        bookingForm.onsubmit = null;
-
-        bookingForm.addEventListener(
-
-            "submit",
-
-            async function (e) {
-
-                if (!checkNetwork()) {
-
-                    e.preventDefault();
-
-                    return;
-
-                }
-
-                if (!checkCooldown()) {
-
-                    e.preventDefault();
-
-                    return;
-
-                }
-
-            }
-
-        );
-
-        /* ==========================================
-           After Successful Booking
-        ========================================== */
-
-        function bookingCompleted() {
-
-            clearDraft();
-
-            saveCooldown();
-
-        }
-
-        /* ==========================================
-           Phone Number Formatting
-        ========================================== */
-
-        phone.addEventListener(
-
-            "input",
-
-            () => {
-
-                phone.value =
-
-                    phone.value.replace(
-
-                        /\D/g,
-
-                        ""
-
-                    );
-
-            }
-
-        );
-
-        /* ==========================================
-           Name Formatting
-        ========================================== */
-
-        name.addEventListener(
-
-            "blur",
-
-            () => {
-
-                name.value =
-
-                    name.value
-
-                        .trim()
-
-                        .replace(
-
-                            /\s+/g,
-
-                            " "
-
-                        )
-
-                        .replace(
-
-                            /\b\w/g,
-
-                            c =>
-
-                                c.toUpperCase()
-
-                        );
-
-            }
-
-        );
-        /* ==========================================
-   Contact Form
-========================================== */
-
-const contactForm = document.getElementById("contactForm");
-
-if (contactForm) {
-    contactForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        console.log("STEP 1");
-
-        const data = {
-            type: "contact",
-            name: document.getElementById("name").value,
-            email: document.getElementById("email").value,
-            subject: document.getElementById("subject").value,
-            message: document.getElementById("message").value
+            return isValid;
         };
 
-        console.log("STEP 2", data);
+        bookingForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!navigator.onLine) return showError("No internet connection.");
+            if (!validateBooking()) return;
 
-        try {
-            console.log("STEP 3");
+            // Spam Protection
+            const website = document.getElementById("website").value;
+            const loadTime = document.getElementById("loadTime").value;
+            if (website) return; // Honeypot
+            if (Date.now() - loadTime < 3000) return showError("Please take your time to fill the form.");
 
-            const response = await fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify(data)
-            });
+            // Cooldown check
+            const lastTime = localStorage.getItem("lastSubmitTime");
+            if (lastTime && (Date.now() - lastTime < 30000)) {
+                return showError("Please wait 30 seconds before another booking.");
+            }
 
-            console.log("STEP 4", response);
+            try {
+                bSubmitBtn.disabled = true;
+                bLoader.classList.remove("hidden");
+                bSubmitBtn.querySelector("span").textContent = "Processing...";
 
-            const result = await response.text();
+                const data = {
+                    type: "booking",
+                    timestamp: new Date().toLocaleString(),
+                    name: bInputs.name.value.trim(),
+                    email: bInputs.email.value.trim(),
+                    phone: bInputs.phone.value.trim(),
+                    checkin: bInputs.checkin.value,
+                    checkout: bInputs.checkout.value,
+                    guests: bInputs.guests.value,
+                    roomtype: bInputs.roomtype.value,
+                    message: bInputs.message.value.trim()
+                };
 
-            console.log("STEP 5", result);
+                const res = await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(data) });
+                const result = await res.json();
 
-        } catch (err) {
-            console.error("FETCH ERROR:", err);
-        }
-    });
-}
-
-/* ==========================================
-   Utility Functions
-========================================== */
-
-function formatDate(dateString) {
-
-    const date = new Date(dateString);
-
-    return date.toLocaleDateString("en-IN", {
-
-        day: "2-digit",
-
-        month: "long",
-
-        year: "numeric"
-
-    });
-
-}
-
-function calculateNights(checkin, checkout) {
-
-    const inDate = new Date(checkin);
-
-    const outDate = new Date(checkout);
-
-    return Math.round((outDate - inDate) / (1000 * 60 * 60 * 24));
-
-}
+                if (result.status === "success") {
+                    bookingForm.reset();
+                    localStorage.setItem("lastSubmitTime", Date.now());
+                    showSuccess();
+                } else {
+                    showError(result.message);
+                }
+            } catch (err) {
+                showError("Connection error. Try again.");
+            } finally {
+                bSubmitBtn.disabled = false;
+                bLoader.classList.add("hidden");
+                bSubmitBtn.querySelector("span").textContent = "Book Now";
+            }
+        });
     }
-}
+
+    /* Contact Form */
+    if (contactForm) {
+        contactForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Spam Protection
+            const cWebsite = document.getElementById("contactWebsite").value;
+            const cLoadTime = document.getElementById("contactLoadTime").value;
+            if (cWebsite) return; // Honeypot
+            if (Date.now() - cLoadTime < 3000) return showError("Please take your time to fill the form.");
+
+            const cName = document.getElementById("contactName");
+            const cEmail = document.getElementById("contactEmail");
+            const cSub = document.getElementById("contactSubject");
+            const cMsg = document.getElementById("contactMessage");
+            const cBtn = document.getElementById("contactSubmitBtn");
+            const cLoader = document.getElementById("contactLoader");
+
+            if (!cName.value || !cEmail.value || !cMsg.value) return showError("Please fill required fields.");
+
+            try {
+                cBtn.disabled = true;
+                if (cLoader) cLoader.classList.remove("hidden");
+                cBtn.querySelector("span").textContent = "Sending...";
+
+                const data = {
+                    type: "contact",
+                    name: cName.value.trim(),
+                    email: cEmail.value.trim(),
+                    subject: cSub.value.trim(),
+                    message: cMsg.value.trim()
+                };
+
+                const res = await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(data) });
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    contactForm.reset();
+                    showSuccess();
+                } else {
+                    showError(result.message);
+                }
+            } catch (err) {
+                showError("Failed to send message.");
+            } finally {
+                cBtn.disabled = false;
+                if (cLoader) cLoader.classList.add("hidden");
+                cBtn.querySelector("span").textContent = "Send Message";
+            }
+        });
+    }
+
+    // Modal Events
+    window.addEventListener("click", (e) => {
+        if (e.target === successModal || e.target === errorModal) closeModals();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModals();
+    });
+
+    /* ==========================================
+       AOS Init
+       ========================================== */
+    if (typeof AOS !== "undefined") {
+        AOS.init({ duration: 900, once: true, easing: "ease-in-out" });
+    }
+});

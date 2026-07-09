@@ -262,7 +262,6 @@ header .container{
 
 header:not(.scrolled) .logo h2,
 header:not(.scrolled) nav a {
-    color: #fff;
 }
 
 header:not(.scrolled) .book-btn {
@@ -271,13 +270,13 @@ header:not(.scrolled) .book-btn {
 
 .logo span{
     font-size:.82rem;
-    color:var(--gray);
+    color:var(--black);
     display: block;
     margin-top: -5px;
 }
 
 header:not(.scrolled) .logo span {
-    color: #eee;
+    color: #A9A9A9;
 }
 
 /*==============================
@@ -591,6 +590,14 @@ ROOMS
 
 background:#F8FAFC;
 
+}
+#room-pic{
+  height: 450px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 1%;
+  border: 3px solid #333;
 }
 
 body.dark #rooms{

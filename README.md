@@ -2,7 +2,7 @@
 
 A modern, clean, component-driven React application converted from the multi-page HTML hotel website.
 
-## 🚀 Key Improvements in React
+## 🚀 Key Usage in React
 
 1. **Unified Dynamic Room Page (`/rooms/:slug`)**:
    - Replaced 3 separate redundant HTML files (`standard-room.html`, `deluxe-room.html`, `executive-suite.html`) with a single, clean, dynamic `RoomDetailPage` component driven by centralized room data in `src/data/hotelConfig.js`.
@@ -10,7 +10,7 @@ A modern, clean, component-driven React application converted from the multi-pag
    - Added breadcrumb navigation (`Home / Rooms / Standard Room`).
    - "Explore Other Rooms" comparison cards at the bottom of the page.
 
-2. **100% Google Apps Script Compatibility (`Code.gs` untouched)**:
+2. **100% Google Apps Script Compatibility (`Code.gs` --> Google Scripts)**:
    - Uses the exact same Google Apps Script Web App API endpoint (`SCRIPT_URL`).
    - Sends exact JSON payloads for both **Bookings** (`{ type: "booking", refId, name, email, phone, checkin, checkout, nights, guests, roomtype, totalAmount, message }`) and **Contact** (`{ type: "contact", name, email, subject, message }`).
    - Handles the backend's responses and reference IDs (`RLS-...`).

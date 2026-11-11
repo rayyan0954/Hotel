@@ -1,0 +1,137 @@
+/* Additional React Application Enhancements */
+
+/* Smooth page transitions */
+.page-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Room Switcher Pills on Room Details Page */
+.room-switcher {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.room-switcher-pill {
+  padding: 8px 18px;
+  border-radius: 30px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--dark);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.dark .room-switcher-pill {
+  background: #1E293B;
+  border-color: #334155;
+  color: #fff;
+}
+
+.room-switcher-pill:hover,
+.room-switcher-pill.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(14, 116, 144, 0.25);
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #CBD5E1;
+  margin-bottom: 16px;
+}
+
+.breadcrumbs a {
+  color: #E2E8F0;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumbs a:hover {
+  color: var(--secondary);
+}
+
+.breadcrumbs span.separator {
+  opacity: 0.6;
+}
+
+.breadcrumbs span.current-crumb {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Mobile Slider Enhancement */
+.slider-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.slider-controls button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--dark);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+body.dark .slider-controls button {
+  background: #1E293B;
+  color: #fff;
+  border-color: #334155;
+}
+
+.slider-controls button:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Badge pulse */
+.pulse-badge {
+  animation: pulseShadow 2s infinite;
+}
+
+@keyframes pulseShadow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}

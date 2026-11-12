@@ -4,7 +4,7 @@ export const HOTEL_CONFIG = {
   name: "Rayyan's Luxury Stay",
   tagline: "Comfort • Elegance • Luxury",
   phone: "+91 9164222302",
-  email: "info@rayyansluxurystay.com",
+  email: "rayyan0954@gmail.com",
   whatsappNumber: "919164222302",
   address: {
     street: "123 Luxury Avenue, Jubilee Hills",
